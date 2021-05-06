@@ -1,3 +1,10 @@
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 import Overlay from "./Overlay";
 import Header from "./Header";
 import Categoria from "./Categoria";
@@ -7,13 +14,18 @@ const categorias = [{name: "pratos", description: "Primeiro, seu prato", options
 
 export default function App() {
   return (
-    <div>
-      <Overlay />
+    <Router>
       <Header />
       <div class="menu">
         {categorias.map(item => <Categoria nome={item.name} descricao={item.description} produtos={item.options}/>)}
       </div>
       <Footer />
-    </div>
+
+      <Switch>
+        <Route path="/revisar">
+          <Overlay />
+        </Route>
+      </Switch>
+    </Router>
   );
 }

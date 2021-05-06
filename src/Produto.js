@@ -3,56 +3,135 @@ export default function Produto(produto) {
   let classe = "opcao " + produto.id;
   let buscarClasse = "." + produto.id;
 
-  function selecionarPrato(seletor, nome, preco) { 
-    pedido.prato = nome;
-    pedido.precoPrato = preco;
-    selecionarItem(seletor, ".pratos");
-  }
-
-  function selecionarBebida(seletor, nome, preco) {
-    pedido.bebida = produto.nome;
-    pedido.precoBebida = produto.preco;
-    selecionarItem(seletor, ".bebidas");
-  }
-
-  function selecionarSobremesa(seletor, nome, preco) {
-    pedido.sobremesa = nome;
-    pedido.precoSobremesa = preco;
-    selecionarItem(seletor, ".sobremesas");
-  }
-
-  function selecionarItem(seletorClicado, seletorCategoria) {
-    const seletorSelecionado = seletorCategoria + " .selecionado";
-    const selecionado = document.querySelector(seletorSelecionado);
-
-    if (selecionado !== null) {
-      selecionado.classList.remove("selecionado");
+  function selecionarPrato() {
+    const selecionado = document.querySelector(buscarClasse);
+    const quantidade = selecionado.querySelector(".quantidade");
+    if (!selecionado.classList.contains("selecionado")) {
+      pedido.prato.push({
+        nome: produto.nome,
+        preco: produto.preco,
+        quantidade: 1,
+      });
+      selecionado.classList.add("selecionado");
     } else {
-      pedido.contador += 1;
+      if (quantidade.innerHTML === "0") {
+        const remover = document.querySelector(buscarClasse);
+        remover.classList.remove("selecionado");
+        quantidade.innerHTML = "1";
+      }
     }
 
-    const opcao = document.querySelector(seletorClicado);
-    opcao.classList.add("selecionado");
+    habilitarBotaoSePedidoCompleto();
+  }
+
+  function selecionarBebida() {
+    const selecionado = document.querySelector(buscarClasse);
+    const quantidade = selecionado.querySelector(".quantidade");
+    if (!selecionado.classList.contains("selecionado")) {
+      pedido.bebida.push({
+        nome: produto.nome,
+        preco: produto.preco,
+        quantidade: 1,
+      });
+      selecionado.classList.add("selecionado");
+    } else {
+      if (quantidade.innerHTML === "0") {
+        const remover = document.querySelector(buscarClasse);
+        remover.classList.remove("selecionado");
+        quantidade.innerHTML = "1";
+      }
+    }
+
+    habilitarBotaoSePedidoCompleto();
+  }
+
+  function selecionarSobremesa() {
+    const selecionado = document.querySelector(buscarClasse);
+    const quantidade = selecionado.querySelector(".quantidade");
+    if (!selecionado.classList.contains("selecionado")) {
+      pedido.sobremesa.push({
+        nome: produto.nome,
+        preco: produto.preco,
+        quantidade: 1,
+      });
+      selecionado.classList.add("selecionado");
+    } else {
+      if (quantidade.innerHTML === "0") {
+        const remover = document.querySelector(buscarClasse);
+        remover.classList.remove("selecionado");
+        quantidade.innerHTML = "1";
+      }
+    }
 
     habilitarBotaoSePedidoCompleto();
   }
 
   function habilitarBotaoSePedidoCompleto() {
-    if (pedido.contador === 3) {
+    if (
+      pedido.prato.length > 0 &&
+      pedido.bebida.length > 0 &&
+      pedido.sobremesa.length > 0
+    ) {
       const botao = document.querySelector(".fazer-pedido");
       botao.classList.add("ativo");
       botao.innerHTML = "Fechar pedido";
+    } else {
+      const botao = document.querySelector(".fazer-pedido");
+      botao.classList.remove("ativo");
     }
   }
 
   function chamarComParametro() {
     if (produto.tipo === "bebidas") {
-      selecionarBebida(buscarClasse, produto.nome, produto.preco);
+      selecionarBebida();
     } else if (produto.tipo === "pratos") {
-      selecionarPrato(buscarClasse, produto.nome, produto.preco);
+      selecionarPrato();
     } else if (produto.tipo === "sobremesas") {
-      selecionarSobremesa(buscarClasse, produto.nome, produto.preco);
+      selecionarSobremesa();
     }
+  }
+
+  function adicionarItem(opcao, nome, categoria) {
+    const classeAdicionar = "." + opcao;
+    const adicionar = document.querySelector(classeAdicionar);
+    const quantidade = adicionar.querySelector(".quantidade");
+    let counter = parseInt(quantidade.innerHTML);
+    counter += 1;
+    quantidade.innerHTML = counter.toString();
+    let refeicao = categoria.slice(0, -1);
+
+    for (let i = 0; i < pedido[refeicao].length; i++) {
+      if (nome === pedido[refeicao][i].nome) {
+        pedido[refeicao][i].quantidade = counter;
+      }
+    }
+  }
+
+  function removerItem(opcao, nome, categoria) {
+    const classeAdicionar = "." + opcao;
+    const adicionar = document.querySelector(classeAdicionar);
+    const quantidade = adicionar.querySelector(".quantidade");
+    let counter = parseInt(quantidade.innerHTML);
+    counter -= 1;
+    quantidade.innerHTML = counter.toString();
+    let refeicao = categoria.slice(0, -1);
+
+    for (let i = 0; i < pedido[refeicao].length; i++) {
+      if (nome === pedido[refeicao][i].nome) {
+        pedido[refeicao][i].quantidade = counter;
+        if (pedido[refeicao][i].quantidade <= 0) {
+          pedido[refeicao].splice(i, 1);
+        }
+      }
+    }
+  }
+
+  function passarIdAdicionar() {
+    adicionarItem(produto.id, produto.nome, produto.tipo);
+  }
+
+  function passarIdRemover() {
+    removerItem(produto.id, produto.nome, produto.tipo);
   }
 
   return (
@@ -63,6 +142,11 @@ export default function Produto(produto) {
       <div class="preco">R$ {produto.preco}</div>
       <div class="check">
         <ion-icon name="checkmark-circle"></ion-icon>
+        <div class="adicionar-item">
+          <ion-icon name="remove-circle" onClick={passarIdRemover}></ion-icon>
+          <div class="quantidade">1</div>
+          <ion-icon name="add-circle" onClick={passarIdAdicionar}></ion-icon>
+        </div>
       </div>
     </div>
   );

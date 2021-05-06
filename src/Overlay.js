@@ -1,21 +1,50 @@
 import App from "./App";
 import ReactDOM from "react-dom";
 import pedido from "./Pedido";
+import Item from "./Item";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
 export default function Overlay() {
-  const precoTotal =
-    parseFloat(pedido.precoPrato) +
-    parseFloat(pedido.precoBebida) +
-    parseFloat(pedido.precoSobremesa);
+  let precoTotal = 0;
+  for(let i = 0; i < pedido.prato.length; i++) {
+    precoTotal += parseFloat(pedido.prato[i].quantidade)*parseFloat(pedido.prato[i].preco)
+  }
+
+  for(let i = 0; i < pedido.bebida.length; i++) {
+    precoTotal += parseFloat(pedido.bebida[i].quantidade)*parseFloat(pedido.bebida[i].preco)
+  }
+
+  for(let i = 0; i < pedido.sobremesa.length; i++) {
+    precoTotal += parseFloat(pedido.sobremesa[i].quantidade)*parseFloat(pedido.sobremesa[i].preco)
+  }
 
   function enviarPedido() {
+    let pratos = "";
+    let bebidas = "";
+    let sobremesas = "";
+    for(let i = 0; i < pedido.prato.length; i++){
+      pratos += (" " + pedido.prato[i].nome);
+    }
+    for(let i = 0; i < pedido.bebida.length; i++){
+      bebidas +=(" " + pedido.bebida[i].nome);
+    }
+    for(let i = 0; i < pedido.sobremesa.length; i++){
+      sobremesas += (" " + pedido.sobremesa[i].nome);
+    }
+
+
     const mensagem =
       "Olá, gostaria de fazer o pedido:\n- Prato: " +
-      pedido.prato +
+      pratos +
       "\n- Bebida: " +
-      pedido.bebida +
+      bebidas +
       "\n- Sobremesa: " +
-      pedido.sobremesa +
+      sobremesas +
       "\nTotal: R$ " +
       precoTotal.toFixed(2);
     const mensagemFormatada = encodeURIComponent(mensagem);
@@ -24,28 +53,17 @@ export default function Overlay() {
   }
 
   function cancelarPedido() {
-    const overlay = document.querySelector(".overlay");
-    overlay.classList.add("escondido");
     ReactDOM.render(<App />, document.querySelector(".root"));
   }
 
   return (
-    <div class="overlay escondido">
+    <div class="overlay">
       <div class="confirmar-pedido">
         <div class="titulo">Confirme seu pedido</div>
         <ul>
-          <li class="prato">
-            <div class="nome">{pedido.prato}</div>
-            <div class="preco">{pedido.precoPrato}</div>
-          </li>
-          <li class="bebida">
-            <div class="nome">{pedido.bebida}</div>
-            <div class="preco">{pedido.precoBebida}</div>
-          </li>
-          <li class="sobremesa">
-            <div class="nome">{pedido.sobremesa}</div>
-            <div class="preco">{pedido.precoSobremesa}</div>
-          </li>
+          {pedido.prato.map(item => <Item nome={item.nome} preco={item.preco} quantidade={item.quantidade} />)}
+          {pedido.bebida.map(item => <Item nome={item.nome} preco={item.preco} quantidade={item.quantidade} />)}
+          {pedido.sobremesa.map(item => <Item nome={item.nome} preco={item.preco} quantidade={item.quantidade} />)}  
           <li class="total">
             <div>Total</div>
             <div>R$ {precoTotal.toFixed(2)}</div>
@@ -54,9 +72,11 @@ export default function Overlay() {
         <button class="confirmar" onClick={enviarPedido}>
           Tudo certo, pode pedir!
         </button>
-        <button class="cancelar" onClick={cancelarPedido}>
-          Cancelar
-        </button>
+        <Link to="/">
+          <button class="cancelar" onClick={cancelarPedido}>
+            Cancelar
+          </button>
+        </Link>
       </div>
     </div>
   );
