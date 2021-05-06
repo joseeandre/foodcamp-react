@@ -6,7 +6,7 @@ export default function Categoria(categoria) {
     <div class="secao">
       <div class="titulo">{categoria.descricao}</div>
       <div class={classe}>
-        {categoria.produtos.map(item => <Produto tipo={categoria.nome}  nome={item.name} preco={item.price} id={item.id} descricao={item.description} foto={item.image} />)};
+        {categoria.produtos.map(item => <Produto tipo={categoria.nome}  nome={item.name} preco={item.price} id={item.id} descricao={item.description} foto={item.image} />)}
       </div>
     </div>
   );
