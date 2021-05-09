@@ -235,3 +235,12 @@ body {
 .escondido {
   display: none;
 }
+
+.overlay .nome {
+  width: 175px;
+}
+
+.overlay .preco {
+  text-align: end;
+  width: 65px;
+}

@@ -28,13 +28,13 @@ export default function Overlay() {
     let bebidas = "";
     let sobremesas = "";
     for(let i = 0; i < pedido.prato.length; i++){
-      pratos += (" " + pedido.prato[i].nome);
+      pratos += (" " + pedido.prato[i].nome + ": " + pedido.prato[i].quantidade +"\n");
     }
     for(let i = 0; i < pedido.bebida.length; i++){
-      bebidas +=(" " + pedido.bebida[i].nome);
+      bebidas +=(" " + pedido.bebida[i].nome + ": " + pedido.bebida[i].quantidade +"\n");
     }
     for(let i = 0; i < pedido.sobremesa.length; i++){
-      sobremesas += (" " + pedido.sobremesa[i].nome);
+      sobremesas += (" " + pedido.sobremesa[i].nome + ": " + pedido.sobremesa[i].quantidade +"\n");
     }
 
 
@@ -48,7 +48,7 @@ export default function Overlay() {
       "\nTotal: R$ " +
       precoTotal.toFixed(2);
     const mensagemFormatada = encodeURIComponent(mensagem);
-    const url = "https://wa.me/5521999998844?text=" + mensagemFormatada;
+    const url = "https://wa.me/5512981253244?text=" + mensagemFormatada;
     window.open(url);
   }
 

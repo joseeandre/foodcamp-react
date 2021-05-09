@@ -8,14 +8,11 @@ import {
 } from "react-router-dom";
 
 export default function Footer() {
-  function confirmarPedido() {
-    ReactDOM.render(<App />, document.querySelector(".root"));
-  }
 
   return (
     <Link to="/revisar">
       <div class="footer">
-        <a href="#" class="fazer-pedido" onClick={confirmarPedido}>
+        <a href="#" class="fazer-pedido">
           Selecione os 3 itens
           <br />
           para fechar o pedido

@@ -78,6 +78,7 @@ export default function Produto(produto) {
     } else {
       const botao = document.querySelector(".fazer-pedido");
       botao.classList.remove("ativo");
+      botao.innerHTML = "Selecione os 3 itens <br /> para fechar o pedido";
     }
   }
 
@@ -95,14 +96,16 @@ export default function Produto(produto) {
     const classeAdicionar = "." + opcao;
     const adicionar = document.querySelector(classeAdicionar);
     const quantidade = adicionar.querySelector(".quantidade");
-    let counter = parseInt(quantidade.innerHTML);
-    counter += 1;
-    quantidade.innerHTML = counter.toString();
-    let refeicao = categoria.slice(0, -1);
+    if(adicionar.classList.contains("selecionado")){
+      let counter = parseInt(quantidade.innerHTML);
+      counter += 1;
+      quantidade.innerHTML = counter.toString();
+      let refeicao = categoria.slice(0, -1);
 
-    for (let i = 0; i < pedido[refeicao].length; i++) {
-      if (nome === pedido[refeicao][i].nome) {
-        pedido[refeicao][i].quantidade = counter;
+      for (let i = 0; i < pedido[refeicao].length; i++) {
+        if (nome === pedido[refeicao][i].nome) {
+          pedido[refeicao][i].quantidade = counter;
+        }
       }
     }
   }
@@ -111,16 +114,18 @@ export default function Produto(produto) {
     const classeAdicionar = "." + opcao;
     const adicionar = document.querySelector(classeAdicionar);
     const quantidade = adicionar.querySelector(".quantidade");
-    let counter = parseInt(quantidade.innerHTML);
-    counter -= 1;
-    quantidade.innerHTML = counter.toString();
-    let refeicao = categoria.slice(0, -1);
+    if(adicionar.classList.contains("selecionado")){
+      let counter = parseInt(quantidade.innerHTML);
+      counter -= 1;
+      quantidade.innerHTML = counter.toString();
+      let refeicao = categoria.slice(0, -1);
 
-    for (let i = 0; i < pedido[refeicao].length; i++) {
-      if (nome === pedido[refeicao][i].nome) {
-        pedido[refeicao][i].quantidade = counter;
-        if (pedido[refeicao][i].quantidade <= 0) {
-          pedido[refeicao].splice(i, 1);
+      for (let i = 0; i < pedido[refeicao].length; i++) {
+        if (nome === pedido[refeicao][i].nome) {
+          pedido[refeicao][i].quantidade = counter;
+          if (pedido[refeicao][i].quantidade <= 0) {
+            pedido[refeicao].splice(i, 1);
+          }
         }
       }
     }
@@ -136,7 +141,7 @@ export default function Produto(produto) {
 
   return (
     <div class={classe} onClick={chamarComParametro}>
-      <img src={produto.foto} />
+      <img src={produto.foto} alt={produto.nome} />
       <div class="titulo">{produto.nome}</div>
       <div class="descricao">{produto.descricao}</div>
       <div class="preco">R$ {produto.preco}</div>
